@@ -76,7 +76,7 @@ Mount the certificate volume to your reverse proxy container. Example snippet fo
 volumes:
   lego-certs:
     name: "certs_global_storage" # or set your...
-    driver: local
+    external: true
 
 services:
   nginx:
