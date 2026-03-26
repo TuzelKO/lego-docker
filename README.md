@@ -39,7 +39,7 @@ docker compose up -d
 ### 3. Obtain a Certificate
 
 ```bash
-docker compose exec app certctl new --domain="example.com" --domain="*.example.com"
+docker compose exec app certctl new -d="example.com" -d="*.example.com"
 ```
 
 ### 4. Stop the Service
