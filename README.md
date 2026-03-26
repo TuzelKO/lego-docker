@@ -1,6 +1,6 @@
 # Lego Docker
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/tuzelko/lego)](https://hub.docker.com/r/yourusername/lego-docker)
+[![Docker Pulls](https://img.shields.io/docker/pulls/tuzelko/lego)](https://hub.docker.com/r/tuzelko/lego)
 [![License](https://img.shields.io/github/license/tuzelko/lego-docker)](LICENSE)
 
 A Docker solution for managing [Let's Encrypt](https://letsencrypt.org/) SSL/TLS certificates using the [Lego](https://github.com/go-acme/lego) client. Designed to run as a background service with automatic renewal and minimal configuration.
