@@ -1,0 +1,26 @@
+name: "lego"
+
+services:
+  app:
+    image: tuzelko/lego:latest
+    environment:
+      LEGO_ADMIN_EMAIL: "webmaster@example.com"
+      LEGO_ACCEPT_TOS: "true"
+      # Visit docs: https://go-acme.github.io/lego/dns/index.html
+      LEGO_DNS_PROVIDER: "cloudflare"
+      CF_DNS_API_TOKEN: "change-me" # or CF_DNS_API_TOKEN_FILE: "/run/secrets/cf_dns_api_token"
+    volumes:
+      - app-storage:/home/app/
+    healthcheck:
+      test: [ "CMD", "/bin/healthcheck.sh" ]
+      start_period: 30s
+      start_interval: 5s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: "always"
+
+volumes:
+  app-storage:
+    name: "certs_global_storage" # or set your...
+    driver: local

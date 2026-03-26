@@ -1,0 +1,60 @@
+#!/bin/sh
+set -e
+
+# Required ENV
+readonly required_env_names="\
+LEGO_ADMIN_EMAIL \
+LEGO_DNS_PROVIDER \
+LEGO_ACCEPT_TOS \
+"
+
+# Check required ENV.
+for required_env_name in $required_env_names; do
+    if [ -z "$(eval echo "\$$required_env_name")" ]; then
+        echo "[F] ENV value '$required_env_name' is not set!" >&2
+        exit 1
+    fi
+done
+
+if ! command -v lego > /dev/null; then
+    echo "[F] Lego not installed." >&2
+    exit 1
+fi
+
+ACTION="$1"
+if [ "$#" -gt 0 ]; then
+    shift
+fi
+ARGS="$*"
+
+case "$ACTION" in
+    "help"|"--help"|"-h" )
+    echo "[I] Available commands:"
+    echo " new -d=\"example.com\" -d=\"*.example.com\" ... - obtain new certificate"
+    echo " renew                                           - renew all certificates"
+    ;;
+    "new" )
+    echo "[I] Obtain new certificate..."]
+    ARGS=$(echo "$ARGS" | tr ' ' '\n' | sort | xargs)
+    eval "lego --path=\"./\" --accept-tos=\"$LEGO_ACCEPT_TOS\" --email=\"$LEGO_ADMIN_EMAIL\" --dns=\"$LEGO_DNS_PROVIDER\" $ARGS run"
+    echo "[I] Done!"
+    ;;
+    "renew" )
+    echo "[I] Renew all certificates..."
+    lego --path="./" list | grep "Domains:" | sed 's/^[[:space:]]*Domains:[[:space:]]*//' | while IFS= read -r DOMAINS; do
+        ARGS=$(echo "$DOMAINS" | awk -F',[[:space:]]*' '{
+	    for(i=1; i<=NF; i++) {
+	        gsub(/^[[:space:]]+|[[:space:]]+$/, "", $i);
+	        if ($i != "") printf "--domains=\"%s\" ", $i
+	    }
+        }')
+        eval "lego --path=\"./\" --accept-tos=\"$LEGO_ACCEPT_TOS\" --email=\"$LEGO_ADMIN_EMAIL\" --dns \"$LEGO_DNS_PROVIDER\" $ARGS renew --no-random-sleep=\"true\""
+    done
+    echo "[I] Done!"
+    ;;
+    * )
+    echo "[E] Unknown action."
+    echo "[I] Use 'help' for more information."
+    exit 1
+    ;;
+esac
