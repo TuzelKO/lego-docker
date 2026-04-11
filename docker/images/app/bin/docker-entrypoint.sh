@@ -14,7 +14,7 @@ LEGO_ACCEPT_TOS \
 ##
 # Start container service
 ##
-echo "[I] Initializing service..." && true 1>&2
+echo "[I] Initializing service..."
 
 ##
 # Prepare service ENV
@@ -30,6 +30,6 @@ done
 ##
 # Run service
 ##
-echo "[I] Service initialization complete!" && true 1>&2
-echo "[I] Starting..." && true 1>&2
+echo "[I] Service initialization complete!"
+echo "[I] Starting..."
 exec "$@"
